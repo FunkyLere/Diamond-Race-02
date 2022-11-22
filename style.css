@@ -11,6 +11,8 @@ canvas{
 .diamond{
     transform: rotate(45deg);
     position: absolute;
+    height: 34px;
+    width: 34px;
 }
 button{
     border-radius: 10px;

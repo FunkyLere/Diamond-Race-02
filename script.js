@@ -1,3 +1,8 @@
+// The code at this point faces one desing question:
+// Is the diamond representation going to be part of RaceParticipant,
+// is going to be in the RaceControler or be in another class?
+// First I'll try to create another class to deal with it
+
 /** Class to represent a participant.*/
 class RaceParticipant {
 
@@ -25,57 +30,33 @@ class RaceParticipant {
     get score() {
         return this.#score;
     }
+    set newScore(number) {
+        this.#score = number;
+    }
     get id() {
         return this.#id;
     }
     /** Increment participant's score by 1 */
-    progress() {
-        this.#score += 1;
-    }
+    progress = () => {
+        // console.log(`In progress: this = ${this}`);
+        // console.log(`this.score = ${this.score}`);
+        return this.newScore = this.score +1;
+        // console.log(`this.score = ${this.score}`);
+    };
     /** Reset participant's score to 0 */
     reset() {
-        this.#score = 0;
+        this.score = 0;
     }
 }
-// /** Class representing a participant in the race (a canvas element)*/
-// class Representation {
-//     /** @type {string}*/
-//     #color;
-//     /** @type {number} */
-//     #id;
-//     /** @type {number} */
-//     #score;
-
-//     /**
-//      * Create a diamond.
-//      * @param {string} color - The diamond's color.
-//      * @param {number} id - The diamond's id.
-//      * @param {number} score - The diamond's score.
-//      */
-//     constructor(color, id, score) {
-//         this.#color = color;
-//         this.#id = id;
-//         this.#score = score;
-//     }
-//     represent(canvas) {
-//         this.diamond = document.createElement("div");
-//         this.diamond.className = "diamond";
-//         canvas.insertAdjacentElement("afterend", this.diamond);
-//         // this.diamond.addEventListener("click", function);
-//         this.diamond.style.background = this.#color;
-//         // this.diamond.style.left =  ;
-//         // this.diamond.style.top =  ;
-
-//     }
-// }
-/** Class to manage and represent the Diamond Race */
 class RaceControler {
+    
     /** @type {RaceParticipant[]} */
     #participants = {};
     /** @type {Element} */
     #canvas;
     /** @type {number} */
     #winner;
+
     /** 
      * @param {string[]} colors - The participants' colors.
      * @param {Element} canvas - the html element where the start and finish line are draw.
@@ -87,11 +68,15 @@ class RaceControler {
             const id = i;
             console.log(`color = ${color} and id = ${id}`);
             this.#participants[`${i}`] = new RaceParticipant(color, id);
+            console.log(this.#participants[`${i}`]);
         }
         this.#winner = -1;
     }
-    get canvas(){
+    get canvas() {
         return this.#canvas;
+    }
+    get participantsList() {
+        return this.#participants;
     }
     drawLine = (xPos,yPos, width, height, context) => {
         context.fillRect(xPos,yPos, width, height);
@@ -110,29 +95,33 @@ class RaceControler {
     };
     /** Represent the diamonds and scoring boxes of the race's participants. */
     representParticipants() {
+        this.#diamonds = [];
+        this.#rectagles = [];
         for (let i = 0; i < Object.keys(this.#participants).length; ++i) {
+            console.log(`In representParticipants: this = ${this}`);
             this.diamond = document.createElement("div");
             this.diamond.className = "diamond";
+            this.diamond.dataset.id = `${i}`;
             this.canvas.insertAdjacentElement("afterend", this.diamond);
-            this.diamond.addEventListener("click", this.moveDiamond);
+            this.diamond.addEventListener ("click", this.moveDiamond);
             this.diamond.style.background = this.#participants[`${i}`].color;
-            // this.diamond.style.left =  participant.score;
-            // this.diamond.style.top =  participant.id;
+            this.diamond.style.left = `${(50*this.#participants[i].score)+109}px`;
+            this.diamond.style.top = `${(60*i)+103}px`;
 
             this.rect = document.createElement("div");
             this.rect.setAttribute("class","rectangle");
             this.rect.setAttribute("id", this.#participants[`${i}`].color);
             this.canvas.insertAdjacentElement("afterend", this.rect);
-            // this.rect.style.background = color;
-            // this.rect.style.left = `${scoreXPos}px`;
-            // this.rect.style.top = `${scoreYPos}px`; 
+            this.rect.style.background = this.#participants[`${i}`].color;
+            this.rect.style.left = `${700}px`;
+            this.rect.style.top = `${(20*i)+175}px`; 
 
             this.box = document.createElement("div");
             this.box.setAttribute("class","scoreBox");
             this.box.innerHTML = this.#participants[`${i}`].score;
             this.canvas.insertAdjacentElement("afterend", this.box);
-            // this.box.style.left = `${scoreXPos}px`;
-            // this.box.style.top = `${scoreYPos-2}px`;
+            this.box.style.left = `${700}px`;
+            this.box.style.top = `${(20*i)+175}px`;
 
         }
     }
@@ -159,8 +148,8 @@ class RaceControler {
      * @returns {string|null}
      */
     getParticipantColor(id) {      
-        if (this.#participants[`${id}`]) {
-            return this.#participants[`${id}`].partColor;
+        if (this.participants[`${id}`]) {
+            return this.participants[`${id}`].partColor;
         }
         return null;
     }
@@ -169,14 +158,28 @@ class RaceControler {
      * @returns {strig|null}
     */
     getParticipantScore(id) {
-        if (this.#participants[`${id}`]) {
-            return this.#participants[`${id}`].score;
+        if (this.participants[`${id}`]) {
+            return this.participants[`${id}`].score;
         }
         return null;
     }
     /** Given a partipant's id increment its score by 1 */
-    moveDiamond(id) {
-        this.#participants[`${id}`].progress();
+    moveDiamond () {
+        // Try to use target to know wich one is clicked
+        // from the RaceControler class.
+
+       
+        console.log(this);
+        // console.log(this.diamond.dataset.id);
+        // const temp = this.participantsList[this.diamond.dataset.id].progress();
+        // this.diamond.style.left = `${(50*temp)+109}px`;
+
+        // Acces to the diamond data set
+        // Get the id and call progress using the id as an argument.
+        const temp = this.dataset.id;
+        // console.log(this.participantsList);
+        console.log(this.participantsList[temp].progress());
+      
     }
     /** Removes the Event Listener from the diamonds */
     freezeDiamonds() {
@@ -192,7 +195,7 @@ class RaceControler {
 }
 
 window.onload = function init() {
-    // ACCESING TO THE CANVAS ELEMENT IN THE DOM
+    
     const canvas1 = document.getElementById("race_track");
     const ctx = canvas1.getContext("2d");
 
