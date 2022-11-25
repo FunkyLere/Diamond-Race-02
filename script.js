@@ -72,7 +72,7 @@ class RaceControler {
         this.#diamonds = [];
         this.#rectangles = [];
         this.#boxes = [];
-
+        this.#winner = -1;
         for (let i = 0; i < colors.length; ++i) {
             const color = colors[i];
             const id = i;
@@ -84,7 +84,7 @@ class RaceControler {
             // by doing so "this" refers to the RaceControler instance.
             this.participantsList.get(`${i}`)["representation"].diamond.addEventListener("click", this.moveDiamond);
         }
-        this.#winner = -1;
+        
     }
     get canvas() {
         return this.#canvas;
@@ -100,6 +100,12 @@ class RaceControler {
     }
     get boxes() {
         return this.#boxes;
+    }
+    get winner() {
+        return this.#winner;
+    }
+    set newWinner(number) {
+        this.#winner = number;
     }
     drawLine = (xPos,yPos, width, height, context) => {
         context.fillRect(xPos,yPos, width, height);
@@ -123,6 +129,11 @@ class RaceControler {
             const scoreReseted = participant[1]["data"].score;
             participant[1]["representation"].diamond.style.left = `${(50*scoreReseted)+109}px`;
             participant[1]["representation"].box.innerHTML = scoreReseted;
+        }
+        if (this.winner > -1) {
+            this.participantsList.get(`${this.winner}`)["representation"].box.style.color = "black";
+            this.unfreezeDiamonds();
+            this.newWinner = -1;
         }
     };
     /**
@@ -171,6 +182,7 @@ class RaceControler {
         if (step === 10) {
             this.participantsList.get(`${index}`)["representation"].box.style.color = "red";
             this.freezeDiamonds();
+            this.newWinner = index;
         }      
     };
     /** Removes the Event Listener from the diamonds */
@@ -257,5 +269,4 @@ window.onload = function init() {
     diamondRace1.writeText("End", 503, 12, ctx);
     diamondRace1.writeText("Score Board", 594, 95, ctx);
     diamondRace1.createButton(700,100);
-
 };
