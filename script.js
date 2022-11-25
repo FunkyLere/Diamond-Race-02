@@ -40,7 +40,7 @@ class ParticipantData {
     };
     /** Reset participant's score to 0 */
     reset() {
-        this.score = 0;
+        this.newScore = 0;
     }
 }
 class RaceControler {
@@ -117,11 +117,14 @@ class RaceControler {
         this.resetButton.addEventListener("click", this.resetRace);
     };
     /** Reset all the participant to score 0 */
-    resetRace() {
-        for (const participant of this.#participants) {
-            participant.reset();
+    resetRace = () => {
+        for (const participant of this.participantsList) {
+            participant[1]["data"].reset();
+            const scoreReseted = participant[1]["data"].score;
+            participant[1]["representation"].diamond.style.left = `${(50*scoreReseted)+109}px`;
+            participant[1]["representation"].box.innerHTML = scoreReseted;
         }
-    }
+    };
     /**
      * Check if there a participant with score equals 10.
      * @returns {string|null}
@@ -254,6 +257,5 @@ window.onload = function init() {
     diamondRace1.writeText("End", 503, 12, ctx);
     diamondRace1.writeText("Score Board", 594, 95, ctx);
     diamondRace1.createButton(700,100);
-    // diamondRace1.representParticipants();
 
 };
