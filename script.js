@@ -19,12 +19,24 @@ class ParticipantData {
         this.#id = id;
         this.#score = 0;
     }
+    /**
+     * Get the participant's color.
+     * @return {string} The color as a CSS recognizable string.  
+     */
     get color() {
         return this.#color;
     }
+    /**
+     * Get participant's score.
+     * @return {number} The score value.
+     */
     get score() {
         return this.#score;
     }
+    /**
+     * Set participant's score.
+     * @param {number} - Participant's new score.
+     */
     set newScore(number) {
         this.#score = number;
     }
@@ -32,9 +44,9 @@ class ParticipantData {
         return this.#id;
     }
     /** Increment participant's score by 1 */
-    progress = () => {
+    progress() {
         return this.newScore = this.score +1;
-    };
+    }
     /** Reset participant's score to 0 */
     reset() {
         this.newScore = 0;
