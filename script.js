@@ -1,4 +1,4 @@
-/** Class to represent a participant.*/
+/** Class to save one participant's data.*/
 class ParticipantData {
 
     /**@type {string} */
@@ -33,16 +33,14 @@ class ParticipantData {
     }
     /** Increment participant's score by 1 */
     progress = () => {
-        // console.log(`In progress: this = ${this}`);
-        // console.log(`this.score = ${this.score}`);
         return this.newScore = this.score +1;
-        // console.log(`this.score = ${this.score}`);
     };
     /** Reset participant's score to 0 */
     reset() {
         this.newScore = 0;
     }
 }
+/** Class to manage the race */
 class RaceControler {
     
     /** @type {ParticipantData[]} */
@@ -73,6 +71,7 @@ class RaceControler {
         this.#rectangles = [];
         this.#boxes = [];
         this.#winner = -1;
+
         for (let i = 0; i < colors.length; ++i) {
             const color = colors[i];
             const id = i;
@@ -84,7 +83,6 @@ class RaceControler {
             // by doing so "this" refers to the RaceControler instance.
             this.participantsList.get(`${i}`)["representation"].diamond.addEventListener("click", this.moveDiamond);
         }
-        
     }
     get canvas() {
         return this.#canvas;
@@ -107,13 +105,16 @@ class RaceControler {
     set newWinner(number) {
         this.#winner = number;
     }
+    /** Draws a filled rectangle starting (xPos, yPos) with size width and height in a canvas(context) */
     drawLine = (xPos,yPos, width, height, context) => {
         context.fillRect(xPos,yPos, width, height);
     };
+    /** Write a message in a position in the canvas (context) */
     writeText = (message, xPos, yPos, context) => {
         context.font = "bold 12pt times";
         context.fillText(message, xPos, yPos);  
     };
+    /** Create a button with the resetRace method associated */
     createButton = (xPos, yPos) => {
         this.resetButton = document.createElement("button");
         this.resetButton.textContent = "Reset";
@@ -122,7 +123,7 @@ class RaceControler {
         this.canvas.insertAdjacentElement("afterend", this.resetButton);
         this.resetButton.addEventListener("click", this.resetRace);
     };
-    /** Reset all the participant to score 0 */
+    /** Reset all the participants score to 0 */
     resetRace = () => {
         for (const participant of this.participantsList) {
             participant[1]["data"].reset();
@@ -186,9 +187,6 @@ class RaceControler {
         }      
     };
     /** Removes the Event Listener from the diamonds */
-
-    // Change it for a method that simply removes if there is any or 
-    // set up one if there isn't.
     freezeDiamonds() {
         for (const participant of this.participantsList) {
             participant[1]["representation"].diamond.removeEventListener("click", this.moveDiamond);
@@ -200,6 +198,10 @@ class RaceControler {
             participant[1]["representation"].diamond.addEventListener("click", this.moveDiamond);        }
     }
 }
+/** 
+* Class to represent a participant graphically in the race
+* drawing the diamond, the rectagle and the score box.
+*/
 class ParticipantRepresentation{
     /** @type {string} */
     #color;
