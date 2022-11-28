@@ -21,7 +21,7 @@ class ParticipantData {
     }
     /**
      * Get the participant's color.
-     * @return {string} The color as a CSS recognizable string.  
+     * @return {string} The participant's color as a CSS recognizable string.  
      */
     get color() {
         return this.#color;
@@ -40,9 +40,6 @@ class ParticipantData {
     set newScore(number) {
         this.#score = number;
     }
-    get id() {
-        return this.#id;
-    }
     /** Increment participant's score by 1 */
     progress() {
         return this.newScore = this.score +1;
@@ -55,22 +52,15 @@ class ParticipantData {
 /** Class to manage the race */
 class RaceControler {
     
-    /** @type {ParticipantData[]} */
+    /** @type {Map<string, Object>} */
     #participants;
     /** @type {Element} */
     #canvas;
     /** @type {number} */
     #winner;
-    /** @type {object} */
-    #representations;
-    /** @type {Array} */
-    #diamonds;
-    /** @type {Array} */
-    #rectangles;
-    /** @type {Array} */
-    #boxes;
 
     /** 
+     * Create a race.
      * @param {string[]} colors - The participants' colors.
      * @param {Element} canvas - the html element where the start and finish line are draw.
      */
@@ -78,10 +68,6 @@ class RaceControler {
 
         this.#canvas = canvas;
         this.#participants = new Map;
-        this.#representations = {};
-        this.#diamonds = [];
-        this.#rectangles = [];
-        this.#boxes = [];
         this.#winner = -1;
 
         for (let i = 0; i < colors.length; ++i) {
@@ -96,24 +82,31 @@ class RaceControler {
             this.participantsList.get(`${i}`)["representation"].diamond.addEventListener("click", this.moveDiamond);
         }
     }
+    /**
+     * Get race canvas.
+     * @param {Element} - The canvas where the race will take place.
+     */
     get canvas() {
         return this.#canvas;
     }
+    /**
+     * Get the map containing the participants data and representation.
+     * @param {Map} -The map with the participants data and representation.
+     */
     get participantsList() {
         return this.#participants;
     }
-    get diamonds() {
-        return this.#diamonds;
-    }
-    get rectangles() {
-        return this.#rectangles;
-    }
-    get boxes() {
-        return this.#boxes;
-    }
+    /**
+     * Get winner value.
+     * @param {number} - The id of the race's winner or -1 if there is none.
+     */
     get winner() {
         return this.#winner;
     }
+    /**
+     * Set winner value.
+     * @param {number} - The winner variable new value.
+     */
     set newWinner(number) {
         this.#winner = number;
     }
@@ -150,41 +143,8 @@ class RaceControler {
         }
     };
     /**
-     * Check if there a participant with score equals 10.
-     * @returns {string|null}
-     */
-    getWinnerId() {
-        for (const participant of this.#participants) {
-            if (participant.score == 10) {
-                return participant.id;
-            }
-        }
-        return null;
-    }
-    /** 
-     * Given a participant id returns the participant's color else null.
-     * @returns {string|null}
-     */
-    getParticipantColor(id) {      
-        if (this.participants[`${id}`]) {
-            return this.participants[`${id}`].partColor;
-        }
-        return null;
-    }
-    /**
-     * Given a participant's id returns the partipant's score else null 
-     * @returns {strig|null}
-    */
-    getParticipantScore(id) {
-        if (this.participants[`${id}`]) {
-            return this.participants[`${id}`].score;
-        }
-        return null;
-    }
-    /** 
-     * Function to increment participant score by 1 point, clicking 
-     * on the <div> that represent that participant, and move it accordingly.
-     */
+     * Increase a participant score in 1 point, move the diamond and change the score accordingly. 
+     * */
     moveDiamond =(e)=> {    
         const index = e.target.dataset.id;
         const step = this.participantsList.get(`${index}`)["data"].progress();
@@ -230,6 +190,12 @@ class ParticipantRepresentation{
     /** @type {Element} */
     #box;
 
+    /**
+     * Create a participant representation consisting in a diamond, a rectangle besides the score and the score.
+     * @param {string} color - Representation's color
+     * @param {number} id - Representation's id
+     * @param {Element} canvas - Canvas element where the race takes place.
+     */
     constructor(color, id, canvas){
         
         this.#color = color;
@@ -260,12 +226,24 @@ class ParticipantRepresentation{
         this.#box.style.left = `${700}px`;
         this.#box.style.top = `${(20*this.#id)+174}px`;
     }
+    /**
+     * Get the diamond div element.
+     * @return {Element} The div element representing the diamond.
+     */
     get diamond() {
         return this.#diamond;
     }
+    /**
+     * Get the rectangle div element besides the score.
+     * @return {Element} The div element besides the score.
+     */
     get rectangle() {
         return this.#rectangle;
     }    
+    /**
+     * Get the div element containing the score.
+     * @return {Element} The div element containing the score.
+     */
     get box() {
         return this.#box;
     }
