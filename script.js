@@ -144,6 +144,8 @@ class RaceControler {
     };
     /**
      * Increase a participant score in 1 point, move the diamond and change the score accordingly. 
+     * @function
+     * @instance
      * */
     moveDiamond =(e)=> {    
         const index = e.target.dataset.id;
@@ -206,7 +208,6 @@ class ParticipantRepresentation{
         this.#diamond.className = "diamond";
         this.#diamond.dataset.id = `${this.#id}`;
         this.#canvas.insertAdjacentElement("afterend", this.#diamond);
-        // this.#diamond.addEventListener ("click", RaceControler.moveDiamond);
         this.#diamond.style.background = this.#color;
         this.#diamond.style.left = `${(50*this.#score)+109}px`;
         this.#diamond.style.top = `${(60*this.#id)+103}px`;
