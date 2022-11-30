@@ -132,57 +132,48 @@ class RaceControler {
         return this.#controlerMove;
     }
     /** Draws a filled rectangle starting (xPos, yPos) with size width and height in a canvas(context) */
-    drawLine = (xPos,yPos, width, height, context) => {
+    drawLine(xPos,yPos, width, height, context) {
         context.fillRect(xPos,yPos, width, height);
-    };
+    }
     /** Write a message in a position in the canvas (context) */
-    writeText = (message, xPos, yPos, context) => {
+    writeText(message, xPos, yPos, context) {
         context.font = "bold 12pt times";
         context.fillText(message, xPos, yPos);  
-    };
+    }
     /** Create a button with the resetRace method associated */
-    createButton = (xPos, yPos) => {
+    createButton(xPos, yPos) {
         this.resetButton = document.createElement("button");
         this.resetButton.textContent = "Reset";
         this.resetButton.style.left = `${xPos}px`;
         this.resetButton.style.top = `${yPos}px`;
         this.canvas.insertAdjacentElement("afterend", this.resetButton);
-        this.resetButton.addEventListener("click", this.resetRace);
-    };
-    /** Reset all the participants score to 0 */
-    backToStart() {
-        for (let i = 0; i < colors.length; ++i) {
-        
-        }
-        for (const participant of this.participantsList) {
-            participant[1]["data"].reset();
-            const scoreReseted = participant[1]["data"].score;
-            participant[1]["representation"].diamond.style.left = `${(50*scoreReseted)+109}px`;
-            participant[1]["representation"].box.innerHTML = scoreReseted;
-        }
+        this.resetButton.addEventListener("click", this.resetRace.bind(this));
     }
-    /** Reset all the participants score to 0 */
-
-    // comentar con PIWi
-    resetRace = () => {
-
-
-        for (const participant of this.participantsList) {
-            participant[1]["data"].reset();
-            const scoreReseted = participant[1]["data"].score;
-            participant[1]["representation"].diamond.style.left = `${(50*scoreReseted)+109}px`;
-            participant[1]["representation"].box.innerHTML = scoreReseted;
-        }
+    /** Reset the participant with id = index to score = 0 */
+    backToStart(index) {
+        this.participantsList.get(`${index}`)["data"].reset();
+        const scoreReseted = this.participantsList.get(`${index}`)["data"].score;
+        this.participantsList.get(`${index}`)["representation"].diamond.style.left = `${(50*scoreReseted)+109}px`;
+        this.participantsList.get(`${index}`)["representation"].box.innerHTML = scoreReseted;
+    }
+    /** Reset all the participants score to 0 and bring back event listeners if removed*/
+    resetRace() {
         if (this.winner > -1) {
             this.participantsList.get(`${this.winner}`)["representation"].box.style.color = "black";
-            this.unfreezeDiamonds();
             this.newWinner = -1;
+            for (let i = 0; i < this.colors.length; ++i) {
+                this.backToStart(i);
+                this.participantsList.get(`${i}`)["representation"].diamond.addEventListener("click", this.move);
+            }
+        } else {
+            for (let i = 0; i < this.colors.length; ++i) {
+                this.backToStart(i);
+            }
         }
-    };
+    }
     /**
-     * Increase a participant score in 1 point, move the diamond and change the score accordingly. 
-     * @function
-     * @instance
+     * Increase a participant score in 1 point, 
+     * move the diamond and change the score accordingly. 
      */
     moveDiamond(event) {    
         const index = event.target.dataset.id;
@@ -190,8 +181,8 @@ class RaceControler {
 
         this.participantsList.get(`${index}`)["representation"].diamond.style.left = `${(50*step)+109}px`;
         this.participantsList.get(`${index}`)["representation"].box.innerHTML = step;
-        // const that = this;
-        if (step === 10) {         
+    
+        if (step === 1) {         
             this.participantsList.get(`${index}`)["representation"].box.style.color = "red";
             this.freezeDiamonds();
             this.newWinner = index;
@@ -199,15 +190,8 @@ class RaceControler {
     }
     /** Removes the Event Listener from the diamonds */
     freezeDiamonds() {
-        console.log(this);
         for (const participant of this.participantsList) {
             participant[1]["representation"].diamond.removeEventListener("click", this.move);
-        }
-    }
-    /** Brings back the original Event Listener to the diamonds */
-    unfreezeDiamonds() {
-        for (const participant of this.#participants) {
-            participant[1]["representation"].diamond.addEventListener("click", this.move);
         }
     }
 }
