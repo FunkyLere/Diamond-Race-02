@@ -24,7 +24,7 @@ class Participant {
         this.#id = id;
         this.#canvas = canvas;
         this.#score = 0;
-        this.#representation = Representation(this.color, this.id, this.canvas);
+        this.#representation = new Representation(this.color, this.id, this.canvas);
     }
     /**
      * Get participant's color.
@@ -177,7 +177,7 @@ class RaceControler {
 
         this.#colors = colors;
         this.#canvas = canvas;
-        this.#participants = new Map;
+        this.#participants = [];
         this.#winner = -1;
         this.#controlerMove = this.moveDiamond.bind(this);
 
