@@ -131,7 +131,7 @@ class RaceControler {
     get move() {
         return this.#controlerMove;
     }
-    /** Draws a back rectangle.
+    /** Draws a rectangle.
      * @param {number} xPos - The x coordinate where the rectangle starts.
      * @param {number} yPos - The y coordinate where the rectangle starts.
      * @param {number} width - The rectangle's width in pixels.
