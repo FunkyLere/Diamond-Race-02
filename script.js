@@ -131,16 +131,30 @@ class RaceControler {
     get move() {
         return this.#controlerMove;
     }
-    /** Draws a filled rectangle starting (xPos, yPos) with size width and height in a canvas(context) */
+    /** Draws a back rectangle.
+     * @param {number} xPos - The x coordinate where the rectangle starts.
+     * @param {number} yPos - The y coordinate where the rectangle starts.
+     * @param {number} width - The rectangle's width in pixels.
+     * @param {number} height - The rectangle's height in pixels.
+     * @param {string} context - The canvas context's name.
+     */
     drawLine(xPos,yPos, width, height, context) {
         context.fillRect(xPos,yPos, width, height);
     }
-    /** Write a message in a position in the canvas (context) */
+    /** Write a message in a position in the canvas (context) 
+     * @param {string} message - The text to be writen.
+     * @param {number} xPos - The x coordinate where the message starts.
+     * @param {number} yPos - The y coordinate where the message starts.
+     * @param {string} context - The canvas context's name.
+     */
     writeText(message, xPos, yPos, context) {
         context.font = "bold 12pt times";
         context.fillText(message, xPos, yPos);  
     }
-    /** Create a button with the resetRace method associated */
+    /** Create a button with the resetRace method associated
+     * @param {number} xPos - The x coordinate where the button is going to be.
+     * @param {number} yPos - The y coordinate where the button is going to be.
+     */
     createButton(xPos, yPos) {
         this.resetButton = document.createElement("button");
         this.resetButton.textContent = "Reset";
@@ -149,7 +163,9 @@ class RaceControler {
         this.canvas.insertAdjacentElement("afterend", this.resetButton);
         this.resetButton.addEventListener("click", this.resetRace.bind(this));
     }
-    /** Reset the participant with id = index to score = 0 */
+    /** Reset a participant to score = 0 
+     * @param {number} index - The index (id) of the participant to be reseted.
+    */
     backToStart(index) {
         this.participantsList.get(`${index}`)["data"].reset();
         const scoreReseted = this.participantsList.get(`${index}`)["data"].score;
@@ -174,6 +190,7 @@ class RaceControler {
     /**
      * Increase a participant score in 1 point, 
      * move the diamond and change the score accordingly. 
+     * @param {MouseEvent} - A mouse click on a diamond.
      */
     moveDiamond(event) {    
         const index = event.target.dataset.id;
