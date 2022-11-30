@@ -182,7 +182,7 @@ class RaceControler {
         this.participantsList.get(`${index}`)["representation"].diamond.style.left = `${(50*step)+109}px`;
         this.participantsList.get(`${index}`)["representation"].box.innerHTML = step;
     
-        if (step === 1) {         
+        if (step === 10) {         
             this.participantsList.get(`${index}`)["representation"].box.style.color = "red";
             this.freezeDiamonds();
             this.newWinner = index;
