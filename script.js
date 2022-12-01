@@ -208,7 +208,7 @@ class RaceControler {
     }
     /**
      * Get the map containing the participants data and representation.
-     * @param {Map} -The map with the participants data and representation.
+     * @param {Object[]} -The map with the participants data and representation.
      */
     get participantsList() {
         return this.#participants;
